@@ -1,0 +1,1 @@
+package com.phasezero.catalog.exception;
