@@ -10,21 +10,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ProductAlreadyExistsException.class)
-    public ResponseEntity<Map<String,String>> handleConflict(ProductAlreadyExistsException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", ex.getMessage()));
+    @ExceptionHandler(InvalidProductException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidProduct(InvalidProductException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
     }
 
-    @ExceptionHandler(InvalidProductException.class)
-    public ResponseEntity<Map<String,String>> handleBad(InvalidProductException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", ex.getMessage()));
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleAlreadyExists(ProductAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String,String>> handleAny(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Internal error: " + ex.getMessage()));
+    public ResponseEntity<Map<String, String>> handleAny(Exception ex) {
+        // fallback - return 500 with message
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal error: " + ex.getMessage()));
     }
 }

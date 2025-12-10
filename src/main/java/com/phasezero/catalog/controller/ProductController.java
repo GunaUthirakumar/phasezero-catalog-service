@@ -18,48 +18,59 @@ public class ProductController {
         this.service = service;
     }
 
-
+    // 1) Add product
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         Product saved = service.addProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-
+    // 2) List all products
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts(@RequestParam(value = "category", required = false) String category,
+                                        @RequestParam(value = "q", required = false) String q,
+                                        @RequestParam(value = "sort", required = false) String sort) {
+        // Simple routing convenience: /products?category=... or ?q=... or ?sort=price
+        if (q != null && !q.isBlank()) {
+            return service.searchByName(q);
+        }
+        if (category != null && !category.isBlank()) {
+            return service.filterByCategory(category);
+        }
+        if ("price".equalsIgnoreCase(sort)) {
+            return service.sortByPrice();
+        }
         return service.getAllProducts();
     }
 
-
+    // 3) Get product by partNumber
     @GetMapping("/{partNumber}")
     public ResponseEntity<Product> getProduct(@PathVariable String partNumber) {
         Product p = service.getProduct(partNumber);
-        if (p == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (p == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(p);
     }
 
+    // 4) Search by name (explicit endpoint)
     @GetMapping("/search")
-    public List<Product> searchByName(@RequestParam(name = "q", required = false) String q) {
+    public List<Product> searchByName(@RequestParam(name = "q", required = true) String q) {
         return service.searchByName(q);
     }
 
-    // GET: filter by category
-    @GetMapping("/category/{category}")
-    public List<Product> filterByCategory(@PathVariable String category) {
+    // 5) Filter by category (explicit endpoint)
+    @GetMapping("/filter")
+    public List<Product> filterByCategory(@RequestParam(name = "category", required = true) String category) {
         return service.filterByCategory(category);
     }
 
-    // GET: sort by price (ascending)
+    // 6) Sort by price (explicit endpoint)
     @GetMapping("/sort/price")
     public List<Product> sortByPrice() {
         return service.sortByPrice();
     }
 
-    // GET: total inventory value (price * stock)
-    @GetMapping("/value")
+    // 7) Inventory value
+    @GetMapping("/inventory/value")
     public ResponseEntity<Double> getInventoryValue() {
         double value = service.getInventoryValue();
         return ResponseEntity.ok(value);
