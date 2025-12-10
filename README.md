@@ -26,21 +26,23 @@ No external database is required. The application uses an **in-memory repository
 
 ---
 
-src/
-└── main/
-├── java/com/phasezero/catalog/
-│ ├── controller/ # REST controllers
-│ ├── service/ # Business logic
-│ ├── repository/ # In-memory repository
-│ ├── model/ # Product model
-│ ├── exception/ # Custom exceptions + global error handler
-│ └── PhasezeroCatalogServiceApplication.java
-└── resources/
-└── application.properties
+
+## 📁 Project Structure
+* src/
+* └── main/
+* ├── java/com/phasezero/catalog/
+* │ ├── controller/ # REST controllers
+* │ ├── service/ # Business logic
+* │ ├── repository/ # In-memory repository
+* │ ├── model/ # Product model
+* │ ├── exception/ # Custom exceptions + global error handler
+* │ └── PhasezeroCatalogServiceApplication.java
+* └── resources/
+* └── application.properties
 
 pom.xml
 
-## 📁 Project Structure
+
 
 
 ---
